@@ -2,7 +2,7 @@ import React from 'react';
 import { Collapse, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
-import './Header.css';
+import './Header.scss';
 
 export default class Header extends React.Component {
   constructor() {
