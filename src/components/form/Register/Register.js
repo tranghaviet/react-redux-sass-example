@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-import './Register.css';
+import './Register.scss';
 
 export default class Register extends React.Component {
   constructor(props) {
