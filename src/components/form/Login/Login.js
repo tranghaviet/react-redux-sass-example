@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-import './Login.css';
+import './Login.scss';
 import '../Register/Register.js'
 
 export default class Login extends React.Component {
@@ -16,6 +16,8 @@ export default class Login extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleUserNameChange = this.handleUserNameChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
+
+    console.log(this);
   }
 
   componentDidMount() {
@@ -58,10 +60,10 @@ export default class Login extends React.Component {
   render() {
     return (
       <div>
-        <nav className"navbar narbar-inverase navbar-no-bg" role="navigation">
-          <div className"container">
-            <div className"navbar-header">
-              <a className"navbar-brand" href="#">Loga.vn</a>
+        <nav className="navbar narbar-inverase navbar-no-bg" role="navigation">
+          <div className="container">
+            <div className="navbar-header">
+              <a className="navbar-brand" href="#">Loga.vn</a>
             </div>
           </div>
         </nav>
