@@ -3,13 +3,15 @@ import Counter from "./components/Counter";
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Login from './components/form/Login/Login.js';
 import Register from './components/form/Register/Register.js';
+import axios from 'axios';
 
-// @TODO: Why it not render Login when navigate to '/dang-nhap' Nga?
+axios.defaults.baseURL = 'http://10.0.0.103:65108/api/';
+
 const App = () => (
   <Router>
     <div>
       <Switch>
-        <Route exact path="/" render={() => (<h1>Home</h1>)} />
+        <Route exact path="/" render={() => (<h1 className="btn">Home</h1>)} />
         <Route exact path="/dang-nhap" component={Login} />
         <Route exact path="/dang-ky-tai-khoan" component={Register} />
         {/* <Counter /> */}

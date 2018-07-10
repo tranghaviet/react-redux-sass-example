@@ -23,10 +23,16 @@ npm i
 ```
 
 ### Start the dev server:
+
+To watch both styles and code:
+```
+npm run start
 ```
 
-npm run start:dev
+Only code:
 
+```
+npm run start:dev
 ```
 
 ### Build:

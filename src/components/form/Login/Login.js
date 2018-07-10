@@ -1,7 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Cookies from 'universal-cookie';
 
+// @TODO: config webpack to use absolute path
+// import authService from 'services/AuthService';
+import {login} from '../../../services/AuthService';
 import './Login.scss';
 import '../Register/Register.js'
 
@@ -13,49 +17,69 @@ export default class Login extends React.Component {
       password: "",
       token: ""
     };
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleUserNameChange = this.handleUserNameChange.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    // this.handleSubmit = this.handleSubmit.bind(this);
+    // this.handleUserNameChange = this.handleUserNameChange.bind(this);
+    // this.handlePasswordChange = this.handlePasswordChange.bind(this);
 
     console.log(this);
   }
 
   componentDidMount() {
     if (localStorage.getItem("token")) {
+      // redirect if user logged in
       this.props.history.push("/"); // Chuyen trang chua xu ly
     }
   }
 
-  handleSubmit() {
-    var scope = this;
-    let axiosConfig = {
-      headers: {
-        'content-type': 'application/x-www-form-urlencoded',
-        "Access-Control-Allow-Origin": "*",
-      }
-    };
-    var data = "grant_type=password&username=" + this.state.username + "&password=" + this.state.password;
-    console.log(data);
-    axios.post("http://10.0.0.103:65108/api/oauth/token", data, axiosConfig
-    ).then(function (response) {
-      console.log(response);
+  handleSubmit = (event) => {
+    event.preventDefault();
+    let scope = this;
+    // let axiosConfig = {
+    //   headers: {
+    //     'content-type': 'application/x-www-form-urlencoded',
+    //     "Access-Control-Allow-Origin": "*",
+    //   }
+    // };
+    // var data = "grant_type=password&username=" + this.state.username + "&password=" + this.state.password;
+    // console.log(data);
+    // axios.post("http://10.0.0.103:65108/api/oauth/token", data, axiosConfig
+    // ).then(function (response) {
+    //   console.log(response);
+    //   alert("Dang nhap thanh cong");
+    //   scope.props.history.push("/dang-ky-tai-khoan");  // Chuyen trang : Chua xu ly
+    //   localStorage.setItem("token", response.data.access_token);
+    // }).catch(function (error) {
+    //   console.log(error);
+    //   alert("Dang nhap that bai");
+    // })
+
+    login(this.state.username, this.state.password).then(function (response) {
       alert("Dang nhap thanh cong");
-      scope.props.history.push("/dang-ky-tai-khoan");  // Chuyen trang : CHua xu ly
-      localStorage.setItem("token", response.data.access_token);
+      // scope.props.history.push("/dang-ky-tai-khoan");  // Chuyen trang : Chua xu ly
+      // localStorage.setItem("token", response.data.access_token);
+      scope.updateCookieToken(response.data);
+      scope.setState({token: response.data.access_token});
     }).catch(function (error) {
       console.log(error);
       alert("Dang nhap that bai");
     })
   }
 
-  handleUserNameChange(e) {
-    this.setState({ username: e.target.value });
+  // handleUserNameChange(e) {
+  //   this.setState({ username: e.target.value });
+  // }
+  // handlePasswordChange(e) {
+  //   this.setState({ password: e.target.value });
+  // }
+
+  onInputChange = (event) => {
+    this.setState({[event.target.name]: event.target.value});
   }
 
-  handlePasswordChange(e) {
-    this.setState({ password: e.target.value });
+  updateCookieToken = (data) => {
+    const cookies = new Cookies();
+    cookies.set('access_token', data.access_token, {maxAge: data.expires_in});
   }
-
 
   render() {
     return (
@@ -78,16 +102,24 @@ export default class Login extends React.Component {
                     <div className="f1-progress-line" data-now-value="25" data-number-of-steps="2"></div>
                   </div>
                 </div>
-                <fieldset>
+                <form onSubmit={this.handleSubmit}>
                   <div className="form-group">
-                    <input type="text" placeholder="Tên đăng nhập. VD: loga2018" className="form-control" id="txtUserName"
+                    {/* <input name="username" type="text" placeholder="Tên đăng nhập. VD: loga2018" className="form-control" id="txtUserName"
                       required="required" data-required-error="Bạn chưa nhập thông tin này" autoFocus onChange={this.handleUserNameChange}
-                      data-content="Tên đăng nhập phải <b>không dấu và </br>không chứa khoảng trắng</b>" data-placement="top" data-toggle="popover" data-trigger="hover" />
+                      data-content="Tên đăng nhập phải <b>không dấu và </br>không chứa khoảng trắng</b>"
+                      data-placement="top" data-toggle="popover" data-trigger="hover" /> */}
+                    <input name="username" type="text" placeholder="Tên đăng nhập. VD: loga2018" className="form-control" id="txtUserName"
+                      required="required" data-required-error="Bạn chưa nhập thông tin này" autoFocus onChange={this.onInputChange}
+                      data-content="Tên đăng nhập phải <b>không dấu và </br>không chứa khoảng trắng</b>"
+                      data-placement="top" data-toggle="popover" data-trigger="hover" />
                     <div className="help-block with-errors"></div>
                   </div>
                   <div className="form-group">
-                    <input type="password" placeholder="Mật khẩu" className="f1-password form-control" id="txtPassword"
+                    {/* <input name="password" type="password" placeholder="Mật khẩu" className="f1-password form-control" id="txtPassword"
                       required="required" data-required-error="Bạn chưa nhập Mật khẩu" onChange={this.handlePasswordChange}
+                      data-placement="top" data-toggle="popover" data-trigger="hover" /> */}
+                    <input name="password" type="password" placeholder="Mật khẩu" className="f1-password form-control" id="txtPassword"
+                      required="required" data-required-error="Bạn chưa nhập Mật khẩu" onChange={this.onInputChange}
                       data-placement="top" data-toggle="popover" data-trigger="hover" />
                     <div className="help-block with-errors"></div>
                   </div>
@@ -98,7 +130,7 @@ export default class Login extends React.Component {
                   <div className="f1-buttons">
                     <button className="btn btn-submit" onClick={this.handleSubmit}>Đăng nhập</button>
                   </div>
-                </fieldset>
+                </form>
               </div>
             </div>
           </div>

@@ -3,15 +3,17 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const webpack = require("webpack");
 
 module.exports = {
-  entry: ["./src/index.js", "./src/styles/main.scss"],
+  // entry: ["./src/index.js", "./src/styles/index.scss"],
+  entry: ["./src/index.js", "./src/styles/index.css"],
   output: {
     filename: "bundle.js",
-    path: path.resolve(__dirname, "./public/dist")
+    path: path.resolve(__dirname, "./public/dist"),
+    publicPath: '/'
   },
   module: {
     rules: [
       {
-        test: /\.scss/,
+        test: /\.s?css/,
         loader: ExtractTextPlugin.extract(["css-loader", "sass-loader"])
       },
       {
@@ -32,7 +34,18 @@ module.exports = {
   },
   devServer: {
     contentBase: "./public/",
+    historyApiFallback: true,
     watchContentBase: true
+  },
+  // alias: {
+  //   'services': path.resolve('src/services')
+  // },
+  resolve: {
+    extensions: ['.js', '.jsx'],
+    root: [
+      path.resolve('./src'),
+      path.resolve('./node_modules'),
+    ]
   },
   plugins: [
     new ExtractTextPlugin("bundle.css"),
